@@ -81,7 +81,7 @@ export default function AGVStatus() {
         const date = new Date()
         const temppoints = computeDestinationPoint(checkpoints[Math.round(date.getSeconds()/(checkpoints.length*2))%checkpoints.length], Math.random()*7, Math.random()*360)
         setLoc(temppoints);
-        // setViewState({
+        //  setViewState({...viewState,
         //   longitude: temppoints.longitude,
         //   latitude: temppoints.latitude,
         //   zoom: 20
@@ -116,7 +116,7 @@ export default function AGVStatus() {
     const rightInd = Math.max(nearestIndices[0].index,nearestIndices[1].index); //leftInd+1;
     setTimelinepos0(nearestIndices[0].index);
     if(rightInd==nearestIndices[0].index) {
-      if(nearestIndices[0].distance<=2)
+      if(nearestIndices[0].distance<=4)
         setTimelinepos1(rightInd);
       else
         setTimelinepos1(leftInd);
@@ -124,7 +124,7 @@ export default function AGVStatus() {
     }
     else {
       setTimelinepos1(leftInd);
-      if(nearestIndices[0].distance>2)
+      if(nearestIndices[0].distance>4)
         setTimelinepos2(leftInd);
       else
         setTimelinepos2(leftInd-1);
