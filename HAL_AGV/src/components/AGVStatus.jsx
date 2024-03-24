@@ -52,8 +52,9 @@ export default function AGVStatus() {
 
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const channelId = '1375484';
+  const channelId = '2482432';
   const field = 'feeds';
+  const api_key = '92L3D5FS3OGZ6W81'
 
   const [nearestIndices, setNearestIndices] = useState([{distance: 12.965399, index: 0}, {distance: 12.965295, index: 1}]);
   useEffect(() => {
@@ -64,7 +65,7 @@ export default function AGVStatus() {
     distances.sort((a, b) => a.distance - b.distance);
     const nearest = distances.slice(0, 2);
     setNearestIndices(nearest);
-    console.log(nearest);
+    //console.log(nearest);
   }, [checkpoints, loc]);
 
 
@@ -72,15 +73,17 @@ export default function AGVStatus() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://api.thingspeak.com/channels/${channelId}/${field}.json?results=1`
+          `https://api.thingspeak.com/channels/${channelId}/${field}.json?api_key=${api_key}&results=1`
         );
+        console.log("Temp: "+response.data.feeds[0].field1+"\tHumidity: "+response.data.feeds[0].field2+"\tLatitude: "+response.data.feeds[0].field3+"\tLongitude: "+response.data.feeds[0].field4);
         setData(response.data);
-        setTemp(response.data.feeds[0].field1);
-        setHumid(response.data.feeds[0].field2);
-        //setLoc({latitude: response.data.feeds[0].field3, longitude: response.data.feeds[0].field4});
+        setTemp(Math.round(response.data.feeds[0].field1));
+        setHumid(Math.round(response.data.feeds[0].field2));
+        setLoc({latitude: response.data.feeds[0].field3, longitude: response.data.feeds[0].field4});
         const date = new Date()
-        const temppoints = computeDestinationPoint(checkpoints[Math.round(date.getSeconds()/(checkpoints.length*2))%checkpoints.length], Math.random()*7, Math.random()*360)
-        setLoc(temppoints);
+        //const temppoints = computeDestinationPoint(checkpoints[Math.round(date.getSeconds()/(checkpoints.length*2))%checkpoints.length], Math.random()*7, Math.random()*360)
+        //setLoc(temppoints);
+        
         //  setViewState({...viewState,
         //   longitude: temppoints.longitude,
         //   latitude: temppoints.latitude,
